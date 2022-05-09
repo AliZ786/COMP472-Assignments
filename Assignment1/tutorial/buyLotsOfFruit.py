@@ -36,9 +36,13 @@ def buyLotsOfFruit(orderList):
     """
     totalCost = 0.0
     "*** YOUR CODE HERE ***"
+    # Here we first access the fruit ahd pound tuple from the order list
     for fruit, pound in orderList:
+    # If the fruit is the list, we add the total cost by accessing each element in the list
+    # and then summing the total cost
         if fruit in fruitPrices:
             totalCost +=fruitPrices[fruit]*pound
+    # If the fruit is not in the list, then we would return an error message and return None        
         else:
             print("For fruit" + fruit + " the price is not available")
             return None    

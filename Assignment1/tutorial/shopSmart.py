@@ -30,8 +30,12 @@ def shopSmart(orderList, fruitShops):
         fruitShops: List of FruitShops
     """
     "*** YOUR CODE HERE ***"
+    # Initalized empty array here, which we will increment after
     total_cost = []
 
+    # Here, we add all the cost from the shops in the fruitShops
+    # We use our getPriceOfOrder function to get all the cost from the orderList of a specific shop
+    # To determine the best shop, we would need to determine the fruit shop with the least amount of cost
     for shop in fruitShops:
         total_cost += [shop.getPriceOfOrder(orderList)]
     return fruitShops[total_cost.index(min(total_cost))]
