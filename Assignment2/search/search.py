@@ -85,6 +85,11 @@ def depthFirstSearch(problem):
     print("Start:", problem.getStartState())
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+
+    To try to see if it works:
+    python pacman.py -l tinyMaze -p SearchAgent
+    python pacman.py -l mediumMaze -p SearchAgent
+    python pacman.py -l bigMaze -z .5 -p SearchAgent
     """
     "*** YOUR CODE HERE ***"
 
@@ -103,12 +108,35 @@ def depthFirstSearch(problem):
                 dfsStack.push((child, currAction + [action], exploredNode + [currState]))
                 finalPath = currAction + [action]
    
-
+    util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
-    """Search the shallowest nodes in the search tree first."""
+    """Search the shallowest nodes in the search tree first.
+    To run, do the following commands:
+    python pacman.py -l mediumMaze -p SearchAgent -a fn=bfs --frameTime 0
+    python pacman.py -l bigMaze -p SearchAgent -a fn=bfs -z .5 --frameTime 0
+    python eightpuzzle.py
+    """
+    
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    dfsQueue = util.Queue()
+    dfsQueue.push((problem.getStartState(), [], []))
+    exploredNodes =[]
+
+    while not dfsQueue.isEmpty():
+         node, actions, curCost = dfsQueue.pop()
+
+         if (not node in exploredNodes):
+            exploredNodes.append(node)
+
+            if problem.isGoalState(node):
+                return actions
+
+            for child, direction, cost in problem.getSuccessors(node):
+                dfsQueue.push((child, actions+[direction], curCost + [cost]))
+
+
+   
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
