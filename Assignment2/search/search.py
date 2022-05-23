@@ -119,21 +119,22 @@ def breadthFirstSearch(problem):
     """
     
     "*** YOUR CODE HERE ***"
-    dfsQueue = util.Queue()
-    dfsQueue.push((problem.getStartState(), [], []))
-    exploredNodes =[]
-
-    while not dfsQueue.isEmpty():
-         node, actions, curCost = dfsQueue.pop()
-
-         if (not node in exploredNodes):
-            exploredNodes.append(node)
-
-            if problem.isGoalState(node):
-                return actions
-
-            for child, direction, cost in problem.getSuccessors(node):
-                dfsQueue.push((child, actions+[direction], curCost + [cost]))
+    bfs_queue = util.Queue()
+    bfs_queue.push((problem.getStartState(), []))
+    visited = []
+    while not bfs_queue.isEmpty():
+        top, dirs = bfs_queue.pop()
+        if top in visited:
+            continue
+        if problem.isGoalState(top):
+            return dirs
+        for successor in problem.getSuccessors(top):
+            location = successor[0]
+            direction = successor[1]
+            if location in visited:
+                continue
+            bfs_queue.push((location, dirs + [direction]))
+        visited.append(top)
 
 
    
