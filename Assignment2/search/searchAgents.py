@@ -372,33 +372,33 @@ def get_closest_corner(base, corners):
     return closest_corner, min_distance
 
 
-def cornersHeuristic(state, problem):
-    """
-    A heuristic for the CornersProblem that you defined.
-      state:   The current search state
-               (a data structure you chose in your search problem)
-      problem: The CornersProblem instance for this layout.
-    This function should always return a number that is a lower bound on the
-    shortest path from the state to a goal of the problem; i.e.  it should be
-    admissible (as well as consistent).
-    """
-    corners = problem.corners  # These are the corner coordinates
-    walls = problem.walls  # These are the walls of the maze, as a Grid (game.py)
-    if len(state[1]) == 4:
-        return 0
-    unvisited_corners = []
-    for corner in corners:
-        if corner not in state[1]:
-            unvisited_corners.append(corner)
-    heuristic = 0
-    base_point = state[0]
-    while len(unvisited_corners) > 0:
-        closest_corner, closest_distance = get_closest_corner(base_point, unvisited_corners)
-        base_point = closest_corner
-        unvisited_corners.remove(closest_corner)
-        heuristic += closest_distance
+# # def cornersHeuristic(state, problem):
+# #     """
+# #     A heuristic for the CornersProblem that you defined.
+# #       state:   The current search state
+# #                (a data structure you chose in your search problem)
+# #       problem: The CornersProblem instance for this layout.
+# #     This function should always return a number that is a lower bound on the
+# #     shortest path from the state to a goal of the problem; i.e.  it should be
+# #     admissible (as well as consistent).
+# #     """
+#     corners = problem.corners  # These are the corner coordinates
+#     walls = problem.walls  # These are the walls of the maze, as a Grid (game.py)
+#     if len(state[1]) == 4:
+#         return 0
+#     unvisited_corners = []
+#     for corner in corners:
+#         if corner not in state[1]:
+#             unvisited_corners.append(corner)
+#     heuristic = 0
+#     base_point = state[0]
+#     while len(unvisited_corners) > 0:
+#         closest_corner, closest_distance = get_closest_corner(base_point, unvisited_corners)
+#         base_point = closest_corner
+#         unvisited_corners.remove(closest_corner)
+#         heuristic += closest_distance
 
-    return heuristic
+#     return heuristic
 
 
 class AStarCornersAgent(SearchAgent):
