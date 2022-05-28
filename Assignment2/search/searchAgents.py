@@ -357,8 +357,8 @@ class CornersProblem(search.SearchProblem):
         return len(actions)
 
 
-def manhattan_distance(xy1, xy2):
-    return abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
+def manhattan_distance(point1, point2):
+    return abs(point1[0] - point2[0]) + abs(point2[1] - point2[1])
 
 
 def find_closest_corner(base, corners):
@@ -390,12 +390,13 @@ def cornersHeuristic(state, problem):
     walls = problem.walls  # These are the walls of the maze, as a Grid (game.py)
     location = state[0]
     visited_corners = state[1]
-    heuristic = 0
+   
 
     if len(visited_corners) == 4:
         return 0
 
     empty_corners = []
+    heuristic = 0
 
     for corner in corners:
         if corner not in visited_corners:
