@@ -130,6 +130,7 @@ def breadthFirstSearch(problem):
             continue
 
         if problem.isGoalState(currState):
+            print("Goal state has been reached")
             return currActions
 
         for child in problem.getSuccessors(currState):
@@ -160,6 +161,7 @@ def uniformCostSearch(problem):
             continue
         
         if problem.isGoalState(currState):
+            print("Goal state has been reached")
             return currActions
         
         for child in problem.getSuccessors(currState):
@@ -196,6 +198,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
             exploredNodes.append(currState)
 
             if problem.isGoalState(currState):
+                print("Goal state has been reached")
                 return currActions
 
             for child in problem.getSuccessors(currState):

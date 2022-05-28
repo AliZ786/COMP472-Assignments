@@ -271,6 +271,9 @@ class CornersProblem(search.SearchProblem):
     This search problem finds paths through all four corners of a layout.
 
     You must select a suitable state space and successor function
+
+    python pacman.py -l mediumCorners -p SearchAgent -a fn=bfs,prob=CornersProblem
+
     """
 
     def __init__(self, startingGameState):
@@ -300,13 +303,11 @@ class CornersProblem(search.SearchProblem):
         if starting_position in self.corners:
             corners_visited.append(starting_position)
         return self.startingPosition, corners_visited
-        # util.raiseNotDefined()
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        # print(state)
         return len(state[1]) == 4
         # util.raiseNotDefined()
 
@@ -356,16 +357,16 @@ class CornersProblem(search.SearchProblem):
         return len(actions)
 
 
-def get_manhattan_distance(xy1, xy2):
+def manhattan_distance(xy1, xy2):
     return abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
 
 
-def get_closest_corner(base, corners):
+def find_closest_corner(base, corners):
     min_distance = float('inf')
     closest_corner = None
 
     for corner in corners:
-        dist = get_manhattan_distance(base, corner)
+        dist = manhattan_distance(base, corner)
         if dist < min_distance:
             min_distance = dist
             closest_corner = corner
@@ -381,21 +382,29 @@ def cornersHeuristic(state, problem):
     This function should always return a number that is a lower bound on the
     shortest path from the state to a goal of the problem; i.e.  it should be
     admissible (as well as consistent).
+
+    python pacman.py -l mediumCorners -p AStarCornersAgent -z 0.5
+
     """
     corners = problem.corners  # These are the corner coordinates
     walls = problem.walls  # These are the walls of the maze, as a Grid (game.py)
-    if len(state[1]) == 4:
-        return 0
-    unvisited_corners = []
-    for corner in corners:
-        if corner not in state[1]:
-            unvisited_corners.append(corner)
+    location = state[0]
+    visited_corners = state[1]
     heuristic = 0
-    base_point = state[0]
-    while len(unvisited_corners) > 0:
-        closest_corner, closest_distance = get_closest_corner(base_point, unvisited_corners)
-        base_point = closest_corner
-        unvisited_corners.remove(closest_corner)
+
+    if len(visited_corners) == 4:
+        return 0
+
+    empty_corners = []
+
+    for corner in corners:
+        if corner not in visited_corners:
+            empty_corners.append(corner)
+
+    while len(empty_corners) > 0:
+        closest_corner, closest_distance = find_closest_corner(location, empty_corners)
+        location = closest_corner
+        empty_corners.remove(closest_corner)
         heuristic += closest_distance
 
     return heuristic
