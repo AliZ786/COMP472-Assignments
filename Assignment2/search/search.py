@@ -93,19 +93,19 @@ def depthFirstSearch(problem):
     """
     "*** YOUR CODE HERE ***"
 
-    dfsStack = util.Stack()
-    dfsStack.push((problem.getStartState(),[],[]))
+    dfs_stack = util.Stack()
+    dfs_stack.push((problem.getStartState(),[],[]))
     
-    while not dfsStack.isEmpty():
-        currState, currAction, exploredNode = dfsStack.pop()
+    while not dfs_stack.isEmpty():
+        currState, currAction, exploredNodes = dfs_stack.pop()
 
         if problem.isGoalState(currState):
             print("Goal state has been reached")
             return finalPath
         
         for child, action, steps in problem.getSuccessors(currState):
-            if not child in exploredNode:
-                dfsStack.push((child, currAction + [action], exploredNode + [currState]))
+            if not child in exploredNodes:
+                dfs_stack.push((child, currAction + [action], exploredNodes + [currState]))
                 finalPath = currAction + [action]
    
     util.raiseNotDefined()
@@ -121,20 +121,26 @@ def breadthFirstSearch(problem):
     "*** YOUR CODE HERE ***"
     bfs_queue = util.Queue()
     bfs_queue.push((problem.getStartState(), []))
-    visited = []
+    exploredNodes = []
+
     while not bfs_queue.isEmpty():
-        top, dirs = bfs_queue.pop()
-        if top in visited:
+        currState, currActions = bfs_queue.pop()
+
+        if currState in exploredNodes:
             continue
-        if problem.isGoalState(top):
-            return dirs
-        for successor in problem.getSuccessors(top):
-            location = successor[0]
-            direction = successor[1]
-            if location in visited:
+
+        if problem.isGoalState(currState):
+            return currActions
+
+        for child in problem.getSuccessors(currState):
+            location = child[0]
+            direction = child[1]
+
+
+            if location in exploredNodes:
                 continue
-            bfs_queue.push((location, dirs + [direction]))
-        visited.append(top)
+            bfs_queue.push((location, currActions + [direction]))
+        exploredNodes.append(currState)
 
 
    
@@ -148,27 +154,21 @@ def uniformCostSearch(problem):
     exploredNodes = []
 
     while not ucPQ.isEmpty():
-        state = ucPQ.pop()
+        currState, currActions, currCost = ucPQ.pop()
 
-        if state[0] in exploredNodes:
+        if currState in exploredNodes:
             continue
         
-        if problem.isGoalState(state[0]):
-            return state[1]
+        if problem.isGoalState(currState):
+            return currActions
         
-        for child in problem.getSuccessors(state[0]):
+        for child in problem.getSuccessors(currState):
             location = child[0]
             direction = child[1]
-            currCost = child[2]
+            cost = child[2]
             if location not in exploredNodes:
-                ucPQ.update((location, state[1] + [direction], state[2] + currCost), state[2] + currCost)
-                exploredNodes.append(state[0])
-
-
-
-    
-    
-
+                ucPQ.update((location, currActions + [direction], currCost + cost), cost + currCost)
+                exploredNodes.append(currState)
 
 
     util.raiseNotDefined()
@@ -183,26 +183,28 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    aStarQueue = util.PriorityQueue()
-    start = (problem.getStartState(), [])
-    aStarQueue.push(start, 0)
-    visited = [start[0]]
-    cheapest_cost_to_location = {0: heuristic(start[0], problem)}
 
-    while not aStarQueue.isEmpty():
-        top = aStarQueue.pop()
-        top_cost = cheapest_cost_to_location[visited.index(top[0])]
-        if problem.isGoalState(top[0]):
-            return top[1]
-        for successor in problem.getSuccessors(top[0]):
-            location = successor[0]
-            direction = successor[1]
-            cost = successor[2]
-            if location not in visited or cheapest_cost_to_location[visited.index(location)] > cost + top_cost:
-                #print(f"Location {location}, Heuristic {heuristic(location, problem)}")
-                aStarQueue.update((location, top[1] + [direction]), top_cost + cost + heuristic(location, problem))
-                visited.append(location)
-                cheapest_cost_to_location[len(visited) - 1] = cost + top_cost
+    aStar_PQ = util.PriorityQueue()
+    aStar_PQ.push((problem.getStartState(), [], 0), 0)
+    exploredNodes = []
+
+
+    while not aStar_PQ.isEmpty():
+        currState, currActions, currCost = aStar_PQ.pop()
+
+        if not currState in exploredNodes:
+            exploredNodes.append(currState)
+
+            if problem.isGoalState(currState):
+                return currActions
+
+            for child in problem.getSuccessors(currState):
+                location = child[0]
+                direction = child[1]
+                cost = child[2]
+                if not location in exploredNodes:
+                    totalCost = currCost + cost + heuristic(location, problem)
+                    aStar_PQ.push((location, currActions + [direction], currCost + cost), totalCost)
 
     util.raiseNotDefined()
 
